@@ -80,20 +80,20 @@ const ContactForm = () => {
   };
 
   const inputStyles = (field) =>
-    `w-full bg-transparent text-white placeholder-gray-400 pl-10 pr-4 py-3 border ${
+    `w-full bg-transparent text-black placeholder-gray-400 pl-10 pr-4 py-3 border ${
       errors[field] ? "border-red-500 shake" : "border-cyan-500"
     } rounded-md focus:outline-none focus:ring-2 ${
       errors[field] ? "focus:ring-red-400" : "focus:ring-cyan-400"
     }`;
 
   return (
-    <div className="bg-gray-900 min-h-screen p-6 transition-colors duration-500">
+    <div className="bg-white min-h-screen p-6 transition-colors duration-500">
       <form
         onSubmit={handleSubmit}
-        className="space-y-6 max-w-xl mx-auto text-white p-6 rounded-lg shadow-xl bg-gray-800"
+        className="space-y-6 max-w-xl mx-auto text p-6 rounded-lg shadow-xl bg-white text-black"
         noValidate
       >
-        <h2 className="text-3xl font-bold text-cyan-400 text-center mb-6">Get in Touch</h2>
+        <h2 className="text-3xl font-bold  text-center mb-6">Get in Touch</h2>
 
         {/* Submission Message */}
         {submitMessage.text && (
@@ -107,7 +107,7 @@ const ContactForm = () => {
 
         {/* Name Field */}
         <div className="relative">
-          <FaUser className="absolute top-3.5 left-3 text-cyan-400" />
+          <FaUser className="absolute top-3.5 left-3" />
           <input
             type="text"
             name="name"
@@ -125,7 +125,7 @@ const ContactForm = () => {
 
         {/* Email Field */}
         <div className="relative">
-          <FaEnvelope className="absolute top-3.5 left-3 text-cyan-400" />
+          <FaEnvelope className="absolute top-3.5 left-3 " />
           <input
             type="email"
             name="email"
@@ -143,7 +143,7 @@ const ContactForm = () => {
 
         {/* Phone Number Field */}
         <div className="relative">
-          <FaPhone className="absolute top-3.5 left-3 text-cyan-400" />
+          <FaPhone className="absolute top-3.5 left-3" />
           <input
             type="tel"
             name="number"
@@ -166,7 +166,7 @@ const ContactForm = () => {
           name="message"
           rows="5"
           placeholder="Your Message"
-          className="w-full bg-transparent text-white placeholder-gray-400 p-4 border border-cyan-500 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-400"
+          className="w-full bg-transparent placeholder-gray-400 p-4 border border-cyan-500 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-400"
           value={formData.message}
           onChange={handleChange}
         />
