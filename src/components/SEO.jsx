@@ -2,30 +2,42 @@ import { useEffect } from 'react';
 
 const SEO = ({ 
   title = "Victor Achede // Engineer", 
-  description = "Architecting high-performance web engines and real-time interfaces." 
+  description = "Architecting high-performance web engines and real-time interfaces.",
+  image = "https://victorachede.pxxl.click/vic2.png" // MUST BE ABSOLUTE
 }) => {
   useEffect(() => {
     // 1. Update Document Title
     document.title = title;
 
-    // 2. Update Meta Description
-    let metaDescription = document.querySelector('meta[name="description"]');
-    if (!metaDescription) {
-      metaDescription = document.createElement('meta');
-      metaDescription.name = 'description';
-      document.head.appendChild(metaDescription);
-    }
-    metaDescription.setAttribute('content', description);
+    // 2. Helper function to update or create meta tags
+    const setMetaTag = (attr, value, content, isProperty = false) => {
+      let element = document.querySelector(`meta[${attr}="${value}"]`);
+      if (!element) {
+        element = document.createElement('meta');
+        element.setAttribute(attr, value);
+        document.head.appendChild(element);
+      }
+      element.setAttribute('content', content);
+    };
 
-    // 3. Update Social (OG) Tags
-    const ogImage = document.querySelector('meta[property="og:image"]');
-    if (ogImage) {
-      ogImage.setAttribute('content', '/vic2.png');
-    }
-  }, [title, description]);
+    // 3. Update Standard & Social Tags
+    setMetaTag('name', 'description', description);
+    
+    // Open Graph (Facebook / LinkedIn / WhatsApp)
+    setMetaTag('property', 'og:title', title, true);
+    setMetaTag('property', 'og:description', description, true);
+    setMetaTag('property', 'og:image', image, true);
+    setMetaTag('property', 'og:type', 'website', true);
+
+    // Twitter
+    setMetaTag('name', 'twitter:card', 'summary_large_image');
+    setMetaTag('name', 'twitter:title', title);
+    setMetaTag('name', 'twitter:description', description);
+    setMetaTag('name', 'twitter:image', image);
+
+  }, [title, description, image]);
 
   return null; 
 };
 
-// THIS IS THE LINE YOU ARE MISSING:
 export default SEO;
