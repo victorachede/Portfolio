@@ -11,47 +11,73 @@ const Home = () => {
 
       <section className="max-w-5xl mx-auto px-8 pt-40 pb-20">
         
-        {/* CLEAN HERO */}
-        <div className="max-w-3xl space-y-10 mb-40">
-          <AnimatedOnView>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-zinc-800 bg-zinc-900/30 text-zinc-400 text-xs font-medium tracking-tight">
-              <span className="h-1.5 w-1.5 rounded-full bg-zinc-500"></span>
-              Available for new projects
-            </div>
-          </AnimatedOnView>
-
-          <AnimatedOnView delay={0.1}>
-            <h1 className="text-5xl md:text-7xl font-semibold tracking-tight leading-[1.1] text-zinc-100">
-              Developing products with <br />
-              <span className="text-zinc-500">technical precision.</span>
-            </h1>
-          </AnimatedOnView>
-
-          <AnimatedOnView delay={0.2}>
-            <p className="text-zinc-400 text-lg md:text-xl font-normal leading-relaxed">
-              Victor Achede. I specialize in building refined web applications 
-              and scalable architecture. Currently focused on React, Node, and Cloud Infrastructure.
-            </p>
-          </AnimatedOnView>
-
-          <AnimatedOnView delay={0.3}>
-            <div className="flex flex-col sm:flex-row gap-6 items-start sm:items-center pt-4">
-              <a href="/projects" className="group flex items-center gap-2 px-6 py-3 bg-white text-black rounded-md text-sm font-medium hover:bg-zinc-200 transition-all">
-                View Projects <FiArrowRight className="group-hover:translate-x-0.5 transition-transform" />
-              </a>
-              <div className="flex gap-6 items-center">
-                 <a href="https://github.com/victorachede" className="text-zinc-500 hover:text-zinc-100 transition-colors">
-                  <FiGithub size={20} />
-                </a>
-                <a href="https://x.com/victorachede" className="text-zinc-500 hover:text-zinc-100 transition-colors">
-                  <FiTwitter size={20} />
-                </a>
+        {/* HERO SECTION */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-12 mb-40">
+          
+          {/* LEFT COLUMN: TEXT CONTENT */}
+          <div className="max-w-2xl space-y-10 order-2 md:order-1">
+            <AnimatedOnView>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-zinc-800 bg-zinc-900/30 text-zinc-400 text-xs font-medium tracking-tight">
+                <span className="h-1.5 w-1.5 rounded-full bg-zinc-500 animate-pulse"></span>
+                Available for new projects
               </div>
+            </AnimatedOnView>
+
+            <AnimatedOnView delay={0.1}>
+              <h1 className="text-5xl md:text-7xl font-semibold tracking-tight leading-[1.1] text-zinc-100">
+                Developing products with <br />
+                <span className="text-zinc-500">technical precision.</span>
+              </h1>
+            </AnimatedOnView>
+
+            <AnimatedOnView delay={0.2}>
+              <p className="text-zinc-400 text-lg md:text-xl font-normal leading-relaxed">
+                Victor Achede. I specialize in building refined web applications 
+                and scalable architecture. Currently focused on React, Node, and Cloud Infrastructure.
+              </p>
+            </AnimatedOnView>
+
+            <AnimatedOnView delay={0.3}>
+              <div className="flex flex-col sm:flex-row gap-6 items-start sm:items-center pt-4">
+                <a href="/projects" className="group flex items-center gap-2 px-6 py-3 bg-white text-black rounded-md text-sm font-medium hover:bg-zinc-200 transition-all">
+                  View Projects <FiArrowRight className="group-hover:translate-x-0.5 transition-transform" />
+                </a>
+                <div className="flex gap-6 items-center">
+                   <a href="https://github.com/victorachede" className="text-zinc-500 hover:text-zinc-100 transition-colors">
+                    <FiGithub size={20} />
+                  </a>
+                  <a href="https://x.com/victorachede" className="text-zinc-500 hover:text-zinc-100 transition-colors">
+                    <FiTwitter size={20} />
+                  </a>
+                </div>
+              </div>
+            </AnimatedOnView>
+          </div>
+
+          {/* RIGHT COLUMN: CIRCULAR PROFILE IMAGE */}
+          <AnimatedOnView delay={0.4} className="order-1 md:order-2 flex-shrink-0">
+            <div className="relative group">
+              {/* Spinning Glow Ring */}
+              <div className="absolute -inset-1.5 bg-gradient-to-tr from-zinc-800 via-zinc-400/20 to-zinc-800 rounded-full blur opacity-20 group-hover:opacity-60 transition duration-1000 group-hover:rotate-180"></div>
+              
+              <div className="relative h-44 w-44 md:h-64 md:w-64 rounded-full p-1 border border-zinc-800 bg-zinc-900/50">
+                <img 
+                  src="/vic2.png" 
+                  alt="Victor Achede" 
+                  className="w-full h-full rounded-full object-cover grayscale contrast-125 hover:grayscale-0 transition-all duration-700 ease-in-out"
+                />
+              </div>
+              
+              {/* Protocol status tag next to the circle */}
+              {/* <div className="absolute -bottom-2 right-4 px-2 py-0.5 bg-zinc-900 border border-zinc-700 rounded text-[10px] font-mono text-zinc-500 tracking-tighter uppercase">
+                Victor
+              </div> */}
             </div>
           </AnimatedOnView>
+
         </div>
 
-        {/* TECH STACK - MINIMAL GRID */}
+        {/* TECH STACK */}
         <div className="border-t border-zinc-900 pt-16">
           <AnimatedOnView>
             <h2 className="text-zinc-500 text-xs font-medium uppercase tracking-[0.2em] mb-12">Expertise</h2>

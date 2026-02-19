@@ -5,22 +5,27 @@ const SEO = ({
   description = "Architecting high-performance web engines and real-time interfaces." 
 }) => {
   useEffect(() => {
-    // Set the page title
+    // 1. Update Document Title
     document.title = title;
 
-    // Set the meta description
-    const metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) {
-      metaDescription.setAttribute('content', description);
-    } else {
-      const meta = document.createElement('meta');
-      meta.name = 'description';
-      meta.content = description;
-      document.head.appendChild(meta);
+    // 2. Update Meta Description
+    let metaDescription = document.querySelector('meta[name="description"]');
+    if (!metaDescription) {
+      metaDescription = document.createElement('meta');
+      metaDescription.name = 'description';
+      document.head.appendChild(metaDescription);
+    }
+    metaDescription.setAttribute('content', description);
+
+    // 3. Update Social (OG) Tags
+    const ogImage = document.querySelector('meta[property="og:image"]');
+    if (ogImage) {
+      ogImage.setAttribute('content', '/vic2.png');
     }
   }, [title, description]);
 
-  return null; // This component doesn't render anything to the DOM
+  return null; 
 };
 
+// THIS IS THE LINE YOU ARE MISSING:
 export default SEO;

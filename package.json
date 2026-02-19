@@ -12,9 +12,11 @@
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
     "@paystack/inline-js": "^2.22.7",
+    "@supabase/supabase-js": "^2.97.0",
     "@swc/core": "^1.13.2",
     "@tailwindcss/vite": "^4.1.8",
     "@vitejs/plugin-react-swc": "^3.11.0",
+    "firebase": "^12.9.0",
     "framer-motion": "^12.16.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -23,6 +25,7 @@
     "react-icons": "^5.5.0",
     "react-intersection-observer": "^9.16.0",
     "react-router-dom": "^7.6.2",
+    "react-syntax-highlighter": "^16.1.0",
     "resend": "^4.7.0",
     "tailwindcss": "^4.1.8"
   },

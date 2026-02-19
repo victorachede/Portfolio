@@ -57,3 +57,21 @@ html {
 ::-webkit-scrollbar-thumb:hover {
   background: #27272a;
 }
+/* 6. Protocol Loading Animation */
+@theme {
+  --animate-loading-bar: loading 2s infinite;
+
+  @keyframes loading {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+}
+
+.loading-bar-container {
+  @apply h-1 w-32 bg-zinc-900 overflow-hidden relative rounded-full;
+}
+
+.loading-bar-fill {
+  @apply h-full bg-zinc-500 w-full absolute;
+  animation: var(--animate-loading-bar);
+}
