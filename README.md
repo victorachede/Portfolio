@@ -1,12 +1,23 @@
-# React + Vite
+# Victor Achede // Portfolio v2
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A high-performance, minimalist portfolio and engineering log built with **React**, **Firebase**, and **Tailwind CSS**. Focused on technical precision and archival aesthetics.
 
-Currently, two official plugins are available:
+## 🌀 Core Stack
+* **Frontend:** React 18 + Vite
+* **Styling:** Tailwind CSS + Framer Motion
+* **Database:** Firebase Firestore (Real-time logs & comments)
+* **Icons:** Lucide / React Icons
+* **Deployment:** Vercel / Netlify
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🛠️ Key Features
+- **Dynamic Engineering Logs:** Markdown-supported blog posts with syntax highlighting.
+- **Interactive Layers:** Real-time comment system and "heart" logging.
+- **SEO Optimized:** Dynamic meta-tags via React Helmet for social sharing.
+- **System Aesthetic:** Minimalist dark-mode UI with a technical "protocol" feel.
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🚀 Environment Setup
+Create a `.env` file in the root:
+```env
+VITE_FIREBASE_API_KEY=your_key
+VITE_FIREBASE_AUTH_DOMAIN=your_domain
+...
