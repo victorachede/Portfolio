@@ -5,13 +5,17 @@ import {
   doc, updateDoc, increment, collection, 
   query, where, getDocs, addDoc, onSnapshot, orderBy 
 } from 'firebase/firestore';
-import { FiArrowLeft, FiHeart, FiShare2, FiMessageSquare, FiSend, FiCopy, FiCheck } from 'react-icons/fi';
+import { 
+  FiArrowLeft, FiHeart, FiShare2, FiMessageSquare, 
+  FiSend, FiCopy, FiCheck, FiClock 
+} from 'react-icons/fi';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { Helmet } from 'react-helmet-async';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 
+// --- SWEET CODE BLOCK COMPONENT ---
 const CodeBlock = ({ lang, code }) => {
   const [copied, setCopied] = useState(false);
 
@@ -19,36 +23,48 @@ const CodeBlock = ({ lang, code }) => {
     navigator.clipboard.writeText(code);
     setCopied(true);
     toast.success("Code copied", {
-      style: { background: '#000', color: '#fff', border: '1px solid #27272a', fontSize: '10px', fontFamily: 'monospace' }
+      style: { background: '#121212', color: '#fff', border: '1px solid #27272a', fontSize: '10px', fontFamily: 'monospace' }
     });
     setTimeout(() => setCopied(false), 2000);
   };
 
   return (
-    <div className="my-8 overflow-hidden rounded-lg border border-zinc-900 bg-[#0d0d0d] group/code">
-      <div className="flex justify-between items-center bg-zinc-900/40 px-4 py-2 border-b border-zinc-900">
-        <span className="text-[9px] font-mono text-zinc-500 uppercase tracking-widest">{lang}</span>
-        <button 
-          onClick={copyToClipboard}
-          className="flex items-center gap-1.5 text-[9px] font-mono text-zinc-500 hover:text-white transition-colors uppercase tracking-widest"
-        >
-          {copied ? <FiCheck className="text-emerald-500" /> : <FiCopy />}
+    <div className="my-8 overflow-hidden rounded-xl border border-zinc-800/50 bg-[#0a0a0a] shadow-2xl">
+      {/* Terminal Header */}
+      <div className="flex justify-between items-center bg-zinc-900/30 px-4 py-3 border-b border-zinc-800/50 backdrop-blur-md">
+        <div className="flex items-center gap-2">
+          <div className="flex gap-1.5 mr-2">
+            <div className="w-2.5 h-2.5 rounded-full bg-zinc-800" />
+            <div className="w-2.5 h-2.5 rounded-full bg-zinc-800" />
+            <div className="w-2.5 h-2.5 rounded-full bg-zinc-800" />
+          </div>
+          <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-[0.2em]">{lang}</span>
+        </div>
+        <button onClick={copyToClipboard} className="group flex items-center gap-2 text-[10px] font-mono text-zinc-500 hover:text-emerald-400 transition-all uppercase tracking-widest">
+          {copied ? <FiCheck className="text-emerald-500" /> : <FiCopy className="group-hover:rotate-12 transition-transform" />}
           {copied ? 'Copied' : 'Copy'}
         </button>
       </div>
-      <SyntaxHighlighter
-        language={lang}
-        style={vscDarkPlus}
-        customStyle={{
-          margin: 0,
-          padding: '1.5rem',
-          fontSize: '0.85rem',
-          lineHeight: '1.6',
-          background: 'transparent',
-        }}
-      >
-        {code}
-      </SyntaxHighlighter>
+
+      {/* Code Body with Emerald Accent */}
+      <div className="relative group/body">
+        <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-emerald-500/20 group-hover/body:bg-emerald-500/50 transition-colors" />
+        <div className="max-w-full overflow-x-auto custom-scrollbar">
+          <SyntaxHighlighter
+            language={lang}
+            style={vscDarkPlus}
+            customStyle={{
+              margin: 0,
+              padding: '1.5rem 1.5rem 1.5rem 1.75rem',
+              fontSize: '0.8rem',
+              lineHeight: '1.7',
+              background: 'transparent',
+            }}
+          >
+            {code}
+          </SyntaxHighlighter>
+        </div>
+      </div>
     </div>
   );
 };
@@ -63,10 +79,13 @@ const PostDetail = () => {
   const [allComments, setAllComments] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Constants for sharing
-  const siteUrl = "https://victor-achede.vercel.app"; // UPDATE THIS
-  const currentUrl = `${siteUrl}/blog/${slug}`;
-  const ogImage = `${siteUrl}/og-fallback.png`; // Fallback image in your public folder
+  // --- Read Time Logic ---
+  const calculateReadTime = (content) => {
+    if (!content) return 0;
+    const wordsPerMinute = 200;
+    const words = content.split(/\s+/).length;
+    return Math.ceil(words / wordsPerMinute);
+  };
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -77,18 +96,13 @@ const PostDetail = () => {
         setPost(docRef.data());
         setPostId(docRef.id);
         setLikes(docRef.data().likes || 0);
-        
         const likedPosts = JSON.parse(localStorage.getItem('liked_logs') || '[]');
         if (likedPosts.includes(docRef.id)) setHasLiked(true);
       }
       setLoading(false);
     };
 
-    const qComments = query(
-      collection(db, "comments"), 
-      where("postSlug", "==", slug),
-      orderBy("createdAt", "desc")
-    );
+    const qComments = query(collection(db, "comments"), where("postSlug", "==", slug), orderBy("createdAt", "desc"));
     const unsubscribe = onSnapshot(qComments, (snap) => {
       setAllComments(snap.docs.map(d => ({ id: d.id, ...d.data() })));
     });
@@ -109,13 +123,13 @@ const PostDetail = () => {
   };
 
   const handleShare = async () => {
+    const currentUrl = `https://victorachede.com/blog/${slug}`;
     if (navigator.share) {
-      try { 
-        await navigator.share({ title: post.title, text: post.description.substring(0, 100), url: currentUrl }); 
-      } catch (err) { console.log("Share cancelled"); }
+      try { await navigator.share({ title: post.title, text: post.description.substring(0, 100), url: currentUrl }); } 
+      catch (err) { console.log("Share cancelled"); }
     } else {
       navigator.clipboard.writeText(currentUrl);
-      toast.success("Link copied to clipboard");
+      toast.success("Link copied");
     }
   };
 
@@ -145,116 +159,82 @@ const PostDetail = () => {
         return <CodeBlock key={index} lang={lang} code={code} />;
       }
       return (
-        <p key={index} className="text-zinc-400 text-lg leading-relaxed mb-8 whitespace-pre-line">
-          {block}
+        <p key={index} className="text-zinc-400 text-base md:text-lg leading-relaxed mb-6 md:mb-8 whitespace-pre-line font-light">
+          {block.trim()}
         </p>
       );
     });
   };
 
-  // Helper to get clean text for meta tags (removes code blocks)
-  const getCleanDescription = (content) => {
-    if (!content) return "";
-    return content.split('```').filter((_, i) => i % 2 === 0).join(' ').substring(0, 160) + "...";
-  };
-
   if (loading) return <div className="bg-black min-h-screen" />;
-  if (!post) return <div className="bg-black min-h-screen text-zinc-500 p-20 font-mono text-xs">ERR: POST_NOT_FOUND</div>;
+  if (!post) return <div className="bg-black min-h-screen text-zinc-500 p-10 font-mono text-xs">ERR: POST_NOT_FOUND</div>;
 
   return (
-    <div className="min-h-screen bg-black text-white pt-32 pb-20 px-8">
+    <div className="min-h-screen bg-black text-white pt-24 md:pt-32 pb-20 px-5 md:px-8">
       <Helmet>
         <title>{post.title} | Archive</title>
-        <meta name="description" content={getCleanDescription(post.description)} />
-        
-        {/* Open Graph / Facebook */}
-        <meta property="og:type" content="article" />
-        <meta property="og:url" content={currentUrl} />
-        <meta property="og:title" content={post.title} />
-        <meta property="og:description" content={getCleanDescription(post.description)} />
-        <meta property="og:image" content={ogImage} />
-
-        {/* Twitter */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={post.title} />
-        <meta name="twitter:description" content={getCleanDescription(post.description)} />
-        <meta name="twitter:image" content={ogImage} />
       </Helmet>
 
-      <motion.div 
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-        className="max-w-3xl mx-auto"
-      >
-        <Link to="/blog" className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors mb-12 text-xs font-mono uppercase tracking-[0.2em]">
-          <FiArrowLeft /> Back to Archive
-        </Link>
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="max-w-3xl mx-auto">
+        <div className="flex justify-between items-center mb-10 md:mb-12">
+            <Link to="/blog" className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors text-[10px] font-mono uppercase tracking-widest">
+              <FiArrowLeft /> Back
+            </Link>
+            
+            <div className="flex items-center gap-4 text-[9px] font-mono text-zinc-600 uppercase tracking-widest">
+                <span className="flex items-center gap-1.5"><FiClock size={11}/> {calculateReadTime(post.description)} Min Read</span>
+                <span className="hidden md:inline">/</span>
+                <span className="hidden md:inline text-emerald-500/80">{post.category || "Log"}</span>
+            </div>
+        </div>
         
-        <h1 className="text-6xl font-medium tracking-tighter mb-8 leading-[0.9]">{post.title}</h1>
+        {/* REFINED TITLE SIZE */}
+        <h1 className="text-3xl md:text-5xl font-semibold tracking-tight mb-8 md:mb-10 leading-[1.2] md:leading-[1.1]">
+          {post.title}
+        </h1>
         
-        <div className="border-l border-zinc-800 pl-6 mb-12">
+        <div className="border-l border-zinc-900 pl-5 md:pl-8 mb-16">
           {renderContent(post.description)}
         </div>
 
-        <div className="flex items-center gap-8 py-6 border-y border-zinc-900 mb-12">
-          <button 
-            onClick={handleLike} 
-            disabled={hasLiked}
-            className={`flex items-center gap-2 transition-all ${hasLiked ? 'text-rose-500 cursor-default' : 'text-zinc-500 hover:text-rose-500 group'}`}
-          >
-            <FiHeart className={`${hasLiked ? 'fill-current' : 'group-active:scale-150 transition-transform'}`} /> 
-            <span className="text-xs font-mono">{likes}</span>
+        <div className="flex flex-wrap items-center gap-8 py-6 border-y border-zinc-900/50 mb-16">
+          <button onClick={handleLike} disabled={hasLiked} className={`flex items-center gap-2 transition-all ${hasLiked ? 'text-rose-500' : 'text-zinc-600 hover:text-rose-500'}`}>
+            <FiHeart className={hasLiked ? 'fill-current' : ''} /> 
+            <span className="text-[10px] font-mono">{likes}</span>
           </button>
-
-          <button onClick={handleShare} className="flex items-center gap-2 text-zinc-500 hover:text-emerald-500 transition-colors">
-            <FiShare2 /> 
-            <span className="text-xs font-mono uppercase tracking-widest text-[10px]">Share</span>
+          <button onClick={handleShare} className="flex items-center gap-2 text-zinc-600 hover:text-emerald-500">
+            <FiShare2 /> <span className="text-[10px] font-mono uppercase">Share</span>
           </button>
-
-          <div className="flex items-center gap-2 text-zinc-500">
-            <FiMessageSquare /> 
-            <span className="text-xs font-mono uppercase tracking-widest text-[10px]">{allComments.length} Comments</span>
+          <div className="flex items-center gap-2 text-zinc-600">
+            <FiMessageSquare /> <span className="text-[10px] font-mono uppercase">{allComments.length}</span>
           </div>
         </div>
 
-        <section className="mt-20">
-          <h3 className="text-[10px] font-mono uppercase tracking-[0.3em] mb-8 text-zinc-600">Comments</h3>
-          
+        <section>
+          <h3 className="text-[10px] font-mono uppercase tracking-widest mb-8 text-zinc-700">Communication Terminal</h3>
           <form onSubmit={postComment} className="relative mb-16">
             <textarea 
               value={comment}
               onChange={(e) => setComment(e.target.value)}
-              className="w-full bg-zinc-950/50 border border-zinc-900 p-4 pr-16 rounded outline-none focus:border-emerald-500/50 text-sm h-28 transition-all resize-none font-sans"
-              placeholder="Leave a thought..."
+              className="w-full bg-zinc-950/20 border border-zinc-900 p-5 rounded-lg outline-none focus:border-emerald-500/30 text-sm h-32 transition-all resize-none font-sans"
+              placeholder="Enter message..."
             />
             <button className="absolute bottom-4 right-4 p-2 bg-white text-black rounded-full hover:bg-emerald-500 transition-colors">
               <FiSend size={14} />
             </button>
           </form>
 
-          <div className="space-y-10">
+          <div className="space-y-12">
             <AnimatePresence>
-              {allComments.length > 0 ? allComments.map((c) => (
-                <motion.div 
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  key={c.id} 
-                  className="group"
-                >
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-[10px] font-mono text-zinc-600 uppercase tracking-widest">{c.user}</span>
-                    <span className="text-[9px] font-mono text-zinc-800 italic">
-                      {c.createdAt?.toDate ? c.createdAt.toDate().toLocaleDateString() : 'Just now'}
-                    </span>
+              {allComments.map((c) => (
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} key={c.id} className="group">
+                  <div className="flex justify-between items-center mb-3">
+                    <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">{c.user}</span>
+                    <span className="text-[9px] font-mono text-zinc-800 italic">{c.createdAt?.toDate ? c.createdAt.toDate().toLocaleDateString() : 'Active'}</span>
                   </div>
-                  <p className="text-zinc-400 text-sm border-l border-zinc-900 pl-4 group-hover:border-zinc-700 transition-colors font-sans">
-                    {c.text}
-                  </p>
+                  <p className="text-zinc-400 text-sm border-l border-zinc-900 pl-5 py-1 leading-relaxed">{c.text}</p>
                 </motion.div>
-              )) : (
-                <p className="text-[10px] font-mono text-zinc-800 uppercase italic">Archive silent. Be the first to speak.</p>
-              )}
+              ))}
             </AnimatePresence>
           </div>
         </section>

@@ -75,3 +75,6 @@ html {
   @apply h-full bg-zinc-500 w-full absolute;
   animation: var(--animate-loading-bar);
 }
+
+.custom-scrollbar::-webkit-scrollbar { height: 4px; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: #27272a; border-radius: 10px; }
